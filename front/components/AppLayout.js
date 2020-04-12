@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
-import { Menu, Input, Button } from 'antd';
+import { Menu, Input, Row, Col } from 'antd';
+
+import LoginForm from './LoginForm';
+import UserProfile from './UserProfile';
+
+const dummy = {
+    nickname: '커피모리',
+    Post: [],
+    Followings: [],
+    Followers: [],
+    isLoggedIn: false
+};
 
 const AppLayout = ({ children }) => {
     return (
@@ -19,12 +30,20 @@ const AppLayout = ({ children }) => {
                      />
                 </Menu.Item>
             </Menu>
-            <Link href="/signup">
-                <a>
-                    <Button>회원가입</Button>
-                </a>
-            </Link>
-            { children }
+            <Row gutter ={8}>
+                <Col xs={24} md={6}>
+                    {dummy.isLoggedIn
+                    ? 
+                    <UserProfile />
+                    :
+                    <LoginForm />
+                    }
+                </Col>
+                <Col xs={24} md={12}>
+                    { children }
+                </Col>
+                <Col xs={24} md={6} />
+            </Row>
         </>
     );
 };

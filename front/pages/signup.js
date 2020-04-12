@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import AppLayout from '../components/AppLayout';
 import { Form, Input, Checkbox, Button } from 'antd';
 
@@ -11,7 +11,7 @@ const Signup = () => {
     const [passwordError, setPasswordError] = useState(false);
     const [termError, setTermError] = useState(false);
 
-    const onSubmitForm = (e) => {
+    const onSubmitForm = useCallback((e) => {
         e.preventDefault();
         if(password !== passwordCheck){
             return setPasswordError(true);
@@ -19,39 +19,31 @@ const Signup = () => {
         if(!term){
             return setTermError(true);
         }
-        console.log({
-            id,
-            nick,
-            password,
-            passwordCheck,
-            term
-        });
-    };
+    }, [password, passwordCheck, term]);
     
-    const onChangeId = (e) => {
+    const onChangeId = useCallback((e) => {
         setId(e.target.value);
-    };
+    }, []);
     
-    const onChangeNick = (e) => {
+    const onChangeNick = useCallback((e) => {
         setNick(e.target.value);
-    };
+    }, []);
     
-    const onChangePassword = (e) => {
+    const onChangePassword = useCallback((e) => {
         setPassword(e.target.value);
-    };
+    }, []);
     
-    const onChangePasswordCheck = (e) => {
+    const onChangePasswordCheck = useCallback((e) => {
         setPasswordError(e.target.value !== password);
         setPasswordCheck(e.target.value);
-    };
+    }, [password]);
     
-    const onChangeTerm = (e) => {
+    const onChangeTerm = useCallback((e) => {
         setTermError(false);
         setTerm(e.target.checked);
-    };
+    }, []);
 
     return (
-        <AppLayout>
             <Form 
                 onSubmit={onSubmitForm}
                 style={{ padding: '10px' }}
@@ -118,7 +110,6 @@ const Signup = () => {
                     >가입하기</Button>
                 </div>
             </Form>
-        </AppLayout>
     );
 };
 
