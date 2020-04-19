@@ -1,6 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import AppLayout from '../components/AppLayout';
+import React, { useState, useCallback, useEffect } from 'react';
+import Router from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Checkbox, Button } from 'antd';
+
+import { signupRequestAction } from '../reducers/user';
 
 const Signup = () => {
     const [id, setId] = useState('');
@@ -11,6 +14,16 @@ const Signup = () => {
     const [passwordError, setPasswordError] = useState(false);
     const [termError, setTermError] = useState(false);
 
+    const { isSigningUp, me } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(me){
+            alert('로그인 했으니 메인페이지로 이동');
+            Router.push('/');
+        }
+    }, [me && me.id]);
+
     const onSubmitForm = useCallback((e) => {
         e.preventDefault();
         if(password !== passwordCheck){
@@ -19,7 +32,12 @@ const Signup = () => {
         if(!term){
             return setTermError(true);
         }
-    }, [password, passwordCheck, term]);
+        dispatch(signupAction({
+            id,
+            password,
+            nick
+        }));
+    }, [password, passwordCheck, term, id, nick]);
     
     const onChangeId = useCallback((e) => {
         setId(e.target.value);
@@ -107,6 +125,7 @@ const Signup = () => {
                     <Button 
                         type="primary"
                         htmlType="submit"
+                        loading={isSigningUp}
                     >가입하기</Button>
                 </div>
             </Form>
