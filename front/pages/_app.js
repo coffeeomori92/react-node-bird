@@ -9,7 +9,7 @@ import AppLayout from '../components/AppLayout';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
 
-const NodeBird = ({ Component, store }) => {
+const NodeBird = ({ Component, store, pageProps }) => {
     return (
         <Provider store={store}>
         <Head>
@@ -20,10 +20,20 @@ const NodeBird = ({ Component, store }) => {
             />
         </Head>
         <AppLayout>
-            <Component />
+            <Component {...pageProps} />
         </AppLayout>
         </Provider>
     );
+};
+
+NodeBird.getInitialProps = async (context) => {
+    console.log(context);
+    const { ctx, Component } = context;
+    let pageProps = {};
+    if(Component.getInitialProps){
+        pageProps = await Component.getInitialProps(ctx);
+    }
+    return { pageProps };
 };
 
 export default withRedux((initialState, options) => {

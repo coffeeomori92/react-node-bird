@@ -21,8 +21,8 @@ function logoutAPI(){
     });
 }
 
-function loadUserAPI(){
-    return axios.get('/user/', {
+function loadUserAPI(userId){
+    return axios.get(userId ? `/user/${userId}` : `/user/`, {
         withCredentials: true
     });
 }
@@ -71,12 +71,13 @@ function* logout(){
     }
 }
 
-function* loadUser() {
+function* loadUser(action) {
     try{
-        const result = yield call(loadUserAPI);
+        const result = yield call(loadUserAPI, action.data);
         yield put({
             type: LOAD_USER_SUCCESS,
-            data: result.data
+            data: result.data,
+            me: !action.data
         });
     }catch(e){
         yield put({
