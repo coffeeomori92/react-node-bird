@@ -32,10 +32,10 @@ const Signup = () => {
         if(!term){
             return setTermError(true);
         }
-        dispatch(signupAction({
-            id,
+        dispatch(signupRequestAction({
+            userId : id,
             password,
-            nick
+            nickname : nick
         }));
     }, [password, passwordCheck, term, id, nick]);
     

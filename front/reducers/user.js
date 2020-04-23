@@ -1,15 +1,4 @@
-const dummyUser = {
-    id: 1,
-    nickname: '커피모리',
-    Post: [],
-    Followings: [],
-    Followers: [],
-    isLoggedIn: false,
-    sigupData: {}
-};
-
 const initialState = {
-    isLoggedIn: false, // 로그인 여부
     isLoggingOut: false, // 로그아웃 시도중
     isLoggingIn: false, // 로그인 시도중
     loginErrorReason: '', // 로그인 에러 사유
@@ -63,8 +52,11 @@ export const signupRequestAction = (data) => {
     };
 };
 
-export const loginRequestAction = {
-    type: LOG_IN_REQUEST
+export const loginRequestAction = (data) => {
+    return {
+        type: LOG_IN_REQUEST,
+        data: data
+    }
 };
 
 export const logoutRequestAction = {
@@ -84,15 +76,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
-                isLoggedIn: true,
-                me: dummyUser,
+                me: action.data,
             };
         }
         case LOG_IN_FAILURE: {
             return {
                 ...state,
                 isLoggingIn: false,
-                isLoggedIn: false,
                 loginErrorReason: action.error,
                 me: null
             };
@@ -100,8 +90,20 @@ const reducer = (state = initialState, action) => {
         case LOG_OUT_REQUEST: {
             return {
                 ...state,
-                isLoggedIn: false,
+                isLoggingOut: true
+            }
+        }
+        case LOG_OUT_SUCCESS: {
+            return {
+                ...state,
+                isLoggingOut: false,
                 me: null
+            }
+        }
+        case LOG_OUT_FAILURE: {
+            return {
+                ...state,
+                isLoggingOut: false,
             }
         }
         case SIGN_UP_REQUEST: {
@@ -124,6 +126,22 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isSigningUp: false,
                 signupErrorReason: action.error
+            };
+        }
+        case LOAD_USER_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case LOAD_USER_SUCCESS: {
+            return {
+                ...state,
+                me: action.data
+            };
+        }
+        case LOAD_USER_FAILURE: {
+            return {
+                ...state,
             };
         }
         default: {
